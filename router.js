@@ -10,8 +10,12 @@ const routes = {
     '/home': Home,
     '/about': About
 }
-const {getGameInfo} = require('./common.js');
+const common = require('./common.js');
 let route = {route: routes['/'], template: '/'};
+const hashAppDiv = document.querySelector('#hash-app');
+
+let interval;
+let sec;
 
 // entry point
 function initialRoutes (mode, el) {
@@ -66,23 +70,108 @@ function addFunctions(template) {
     if (template == '/about') {
         
         let resultScore = document.querySelector('#resultScore');
-        resultScore.textContent = getGameInfo().score;
+        resultScore.textContent = common.getGameResultInfo().score;
 
         let avgTime = document.querySelector('#avgTime');
-        avgTime.textContent = getGameInfo().avgTime;
+        avgTime.textContent = common.getGameResultInfo().avgTime;
 
         let replay = document.querySelector('#replay');
         replay.addEventListener('click', () => {
+            clearInterval(interval);
+            console.log('reset game data', common.getGameResultInfo());
+            console.log('reset game info', common.getGameInfo());
             location.hash = '#home';
             hashRouterPush('/home', document.querySelector('#hash-app'));
         });
     } else {
+        common.getDatasFromAPI();
+        common.onGameReset();
         
         const starter = document.querySelector('#btnStart');
         const reset = document.querySelector('#btnReset');
         const input = document.querySelector('#inputText');
+
+        starter.addEventListener('click', () => {
+            console.log('gamestart stage', common.gameInfo.stage)
+            onGameStart(common.gameInfo.stage);
+            starter.classList.add('off');
+            reset.classList.remove('off');
+        });
+        reset.addEventListener('click', () => {
+    
+            starter.classList.remove('off');
+            reset.classList.add('off');
+        });
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                isCorrect(e.target);
+            }
+        });
     }
 }
+
+
+function onGameStart(stage) {
+    const input = document.querySelector('#inputText');
+    input.focus();
+
+    const word = document.querySelector('#qWord');
+    const time = document.querySelector('#remainTime');
+    const scoreEl = document.querySelector('#currentScore');
+    word.textContent = common.getGameData()[stage].text;
+    time.textContent = common.getGameData()[stage].second;
+    scoreEl.textContent = score;
+
+    timer(common.getGameData()[stage].second-1, time, scoreEl);
+}
+
+function timer(time, timeEl, scoreEl) {
+    sec = time % 60;
+    interval = setInterval(() => {
+        sec = time % 60;
+        timeEl.textContent = sec;
+        time--;
+        if (time < 0) {
+            clearInterval(interval);
+            --score;
+            scoreEl.textContent = score;
+            if (common.getGameData()[common.gameInfo.stage+1]) {
+                onGameStart(++common.gameInfo.stage);
+            } else {
+                common.setScore(score);
+                console.log(common.getGameResultInfo());
+                location.hash = '#about';
+                hashRouterPush('/about', hashAppDiv);
+            }
+        }
+    }, 1000);
+}
+
+function isCorrect(target) {
+    const word = document.querySelector('#qWord');
+    console.log('word', word.textContent);
+    console.log('value', target.value);
+    if (target.value === word.textContent) {
+        target.value = '';
+        if (common.getGameData()[common.gameInfo.stage+1]) {
+            common.setAvgTime(common.getGameResultInfo().avgTime + (common.getGameData()[common.gameInfo.stage].second - sec));
+            console.log('sec', sec)
+            console.log('-sec', (common.getGameData()[common.gameInfo.stage].second - sec));
+            console.log(common.getGameResultInfo().avgTime);
+            clearInterval(interval);
+            onGameStart(++common.gameInfo.stage);
+        } else {
+            clearInterval(interval);
+            common.setScore(score);
+            common.setAvgTime((common.getGameResultInfo().avgTime + (common.getGameData()[common.gameInfo.stage].second - sec)) / common.getGameResultInfo().score);
+            location.hash = '#about';
+            hashRouterPush('/about', hashAppDiv);
+        }
+    } else {
+        target.value = '';
+    }
+}
+
 
 module.exports = {
     initialRoutes,
