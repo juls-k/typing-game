@@ -7,7 +7,8 @@ const { resolve } = require('path');
 module.exports = {
     entry: {
         router: './router.js',
-        app: './index.js'
+        app: './index.js',
+        common: './common.js'
     },
 
     output: {
@@ -28,6 +29,10 @@ module.exports = {
 
     module: {
         rules: [
+            {
+                test: /\.html$/,
+                loader: 'html-loader'
+            },
             {
                 test: /\.hbs$/,
                 loader: 'handlebars-loader'

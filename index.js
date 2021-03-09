@@ -1,7 +1,11 @@
 // css
 require('./css/style.css')
+const {
+    getGameInfo,
+    setAvgTime,
+    setScore
+} = require('./common.js');
 
-import Utils from './utils.js';
 
 // router
 const {
@@ -24,6 +28,7 @@ let gameDatas;
 let stage = 0;
 let interval;
 let score;
+let sec;
 
 window.onload = () => {
     const historyLinker = document.querySelectorAll('span.history')
@@ -97,12 +102,13 @@ function onGameStart(stage) {
     time.textContent = gameDatas[stage].second;
     scoreEl.textContent = score;
 
-    timer(gameDatas[stage].second - 1, time, scoreEl);
+    timer(gameDatas[stage].second-1, time, scoreEl);
 }
 
 function timer(time, timeEl, scoreEl) {
+    sec = time % 60;
     interval = setInterval(() => {
-        let sec = time % 60;
+        sec = time % 60;
         timeEl.textContent = sec;
         time--;
         if (time < 0) {
@@ -112,7 +118,8 @@ function timer(time, timeEl, scoreEl) {
             if (gameDatas[stage+1]) {
                 onGameStart(++stage);
             } else {
-                Utils.score = score;
+                setScore(score);
+                console.log(getGameInfo());
                 location.hash = '#about';
                 hashRouterPush('/about', hashAppDiv);
             }
@@ -127,10 +134,21 @@ function isCorrect(target) {
     if (target.value === word.textContent) {
         target.value = '';
         if (gameDatas[stage+1]) {
+            setAvgTime(getGameInfo().avgTime + (gameDatas[stage].second - sec));
+            console.log('sec', sec)
+            console.log('-sec', (gameDatas[stage].second - sec));
+            console.log(getGameInfo().avgTime);
             clearInterval(interval);
             onGameStart(++stage);
         } else {
-            Utils.score = score;
+            clearInterval(interval);
+            setScore(score);
+            setAvgTime(getGameInfo().avgTime + (gameDatas[stage].second - sec));
+            console.log('-sec', (gameDatas[stage].second - sec));
+            console.log('final', getGameInfo().avgTime);
+            setAvgTime(getGameInfo().avgTime / getGameInfo().score);
+            console.log(getGameInfo().avgTime);
+            console.log(getGameInfo());
             location.hash = '#about';
             hashRouterPush('/about', hashAppDiv);
         }
