@@ -1,0 +1,40 @@
+
+.page {
+    width: 50%;
+    margin: 100px auto;
+    height: 30vh;
+}
+.status {
+    display: flex;
+    align-items: center;
+}
+.score {
+    width:50%;
+    text-align: center;
+}
+.time {
+    width:50%;
+    padding-left: 15%;
+}
+.words, .buttons {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+.off {
+    display: none;
+}
+.align-center {
+    text-align: center;
+}
+button {
+    width: 100px;
+    background-color: #2196f3;
+    border: 0;
+    height: 30px;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 17px;
+    margin: 10px auto;
+    cursor: pointer;
+}

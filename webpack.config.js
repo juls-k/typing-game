@@ -6,33 +6,29 @@ const { resolve } = require('path');
 
 module.exports = {
     entry: {
-        router: './router.js',
-        app: './index.js',
-        common: './common.js'
+        router: './src/router.js',
+        app: './src/index.js',
+        common: './src/common.js'
     },
 
     output: {
-        path: resolve(__dirname, './dist'),
+        path: resolve(__dirname, './public'),
         filename: '[name].js'
     },
 
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: 'index.html'
+            template: './src/index.html'
         }),
         new MiniCssExtractPlugin({ filename: 'app.css' }),
         new CleanWebpackPlugin({
-            cleanAfterEveryBuildPatterns: ['dist']
+            cleanAfterEveryBuildPatterns: ['public']
         })
     ],
 
     module: {
         rules: [
-            {
-                test: /\.html$/,
-                loader: 'html-loader'
-            },
             {
                 test: /\.hbs$/,
                 loader: 'handlebars-loader'
