@@ -11,6 +11,9 @@
   npm run build
 ## Test
   npm run test
+  
+
+
 
 ### 프로젝트 구성
 ![initial](https://user-images.githubusercontent.com/80272087/111021747-f71b3d00-8411-11eb-871a-05208734c2a8.PNG)
