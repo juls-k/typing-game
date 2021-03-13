@@ -18,6 +18,12 @@
 ### 프로젝트 구성
 ![initial](https://user-images.githubusercontent.com/80272087/111021747-f71b3d00-8411-11eb-871a-05208734c2a8.PNG)
 
+####js 모듈 구성
+
+
+index.html에 게임 결과, 완료 화면 템플릿을 router.js를 통해 렌더링합니다.
+라우팅 방식은 hash router 방식을 사용합니다.
+게임 주요 기능(단어 API 호출, 버튼 이벤트, 타이머, 점수 계산 등)은 common.js로 모듈화합니다.
 
 
 ### 게임 플레이 화면
