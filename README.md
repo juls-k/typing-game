@@ -9,6 +9,9 @@
   npm run start
 ## Build
   npm run build
+  
+  /public 폴더에 build 됩니다
+  
 ## Test
   npm run test
   
