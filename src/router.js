@@ -14,12 +14,12 @@ const routes = {
 let route = {route: routes['/'], template: '/'};
 
 // entry point
-function initialRoutes (el) {
+function initialRoutes(el) {
     renderHTML(el, route);
 }
 
 // get hash history route
-function getHashRoute () {
+function getHashRoute() {
     let route = {route: '/', template: '/'}
 
     Object.keys(routes).forEach(hashRoute => {
@@ -33,36 +33,15 @@ function getHashRoute () {
 }
 
 // set hash history
-function hashRouterPush (pathName, el) {
+function hashRouterPush(pathName, el) {
     return renderHTML(el, getHashRoute());
 }
 
 // render
-function renderHTML (el, route) {
+function renderHTML(el, route) {
     el.innerHTML = route.route;
     return route;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = {
     initialRoutes,
